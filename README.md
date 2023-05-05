@@ -1,6 +1,6 @@
 ## vcfmerge
 
-_vcfmerge_ - a small Python script that merges somatic SNV/InDel calls from three individual VCF files:
+_vcfmerge_ - a small Python script that merges somatic SNV/InDel calls from three individual (bgzipped) VCF files:
 
    - MuTect2 VCF (SNVs + InDels)
    - Strelka2 SNV VCF
@@ -8,8 +8,17 @@ _vcfmerge_ - a small Python script that merges somatic SNV/InDel calls from thre
 
 Two resulting VCF files are produced:
 
-  - __<tumor_id>_<normal_id>_all.vcf.gz__ - contains all calls, both rejected and PASSed
-  - __<tumor_id>_<normal_id>_somatic.vcf.gz__ - contains all somatic calls (PASS by one or both of Strelka2 and MuTect2)
+  - __<tumor_id>_<normal_id>_all.vcf__ - contains all calls, both rejected and PASSed
+  - __<tumor_id>_<normal_id>_somatic.vcf__ - contains all somatic calls (PASS by one or both of Strelka2 and MuTect2)
+
+The script produces makes multiple dedicated VCF INFO tags in the resulting output files to simplify downstream annotation:
+
+ - __TDP__ - total sequencing depth of variant site in tumor (i.e. _DP_ in tumor sample)
+ - __TVAF__ - allelic fraction of alternate allele in tumor (i.e. _AF_ in tumor sample)
+ - __CDP__ - total sequencing depth of variant site in control (i.e. _DP_ in control sample)
+ - __CVAF__ - allelic fraction of alternate allele in control (i.e. _AF_ in control sample)
+ - __CALLERS__ - any of _mutect2_, _strelka2_, or _mutect2,strelka2 (called by both)
+ - __MNV_SUPPORT_STRELKA__ - as Strelka2 does not properly call multinucleotide variants (MNVs or block substitutions), the script gathers consecutive SNVs (all PASS) from Strelka calls when they are found as an MNV (PASS) in MuTect2
 
 ### Usage
 
@@ -35,4 +44,5 @@ Two resulting VCF files are produced:
 
 ### Notes
 
-- The tumor and control sample identifiers must match the names provided in the individual VCF files (sample columns)
+- The tumor and control sample identifiers provided as input arguments _must_ match the names provided in the individual VCF files (sample columns)
+- Note that the script currently fully ignores multi-allelic sites (i.e. sites with multiple alternate alleles). However, from our experience, it seems that very few such sites contain somatic events with a _PASS_ status
