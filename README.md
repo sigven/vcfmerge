@@ -45,4 +45,4 @@ The script produces multiple dedicated VCF INFO tags in the resulting output fil
 ### Notes
 
 - The tumor and control sample identifiers provided as input arguments _must_ match the names provided in the individual VCF files (sample columns)
-- Note that the script currently fully ignores multi-allelic sites (i.e. sites with multiple alternate alleles). However, from our experience, it seems that very few such sites contain somatic events with a _PASS_ status
+- Note that the script currently fully ignores multi-allelic sites (i.e. sites with multiple alternate alleles). However, from our experience so far, it seems that limited sites of this nature contain somatic events with a _PASS_ status
