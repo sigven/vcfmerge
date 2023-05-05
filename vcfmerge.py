@@ -54,8 +54,8 @@ def __main__():
        logger.error('Output directory ' + str(args.output_dir) + ' does not exist')
        exit(0)
 
-   merge_all_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_vcfmerge_all.vcf')
-   merge_somatic_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_vcfmerge_somatic.vcf')
+   merge_all_vcf = os.path.join(str(args.output_dir), str(args.tumor_sample_id) + '_' + str(args.control_sample_id) + '_vcfmerge_all.vcf')
+   merge_somatic_vcf = os.path.join(str(args.output_dir), str(args.tumor_sample_id) + '_' + str(args.control_sample_id) + '_vcfmerge_somatic.vcf')
    if (os.path.exists(merge_all_vcf) or os.path.exists(str(merge_all_vcf) + '.gz')) and args.force_overwrite is False:
        logger.error('Output file ' + str(merge_all_vcf) + '(.gz) exists - turn on \'--force_overwrite\' to overwrite existing output files')
        exit(0)
@@ -145,8 +145,10 @@ def add_meta_info(meta_info, algorithm = 'mutect2'):
         meta_info[str(algo_prefix) + '_CALL_STATISTIC'] = "##INFO=<ID=" + str(algo_prefix) + "_CALL_STATISTIC" + ",Number=.,Type=String,Description=\"Strelka's quality score: SomaticEVS - " + str(algorithm_meta) + "\">"
     meta_info[str(algo_prefix) + '_FAIL_REASONS'] = "##INFO=<ID=" + str(algo_prefix) + "_FAIL_REASONS" + ",Number=.,Type=String,Description=\"Reasons for not classifying given mutation as somatic - " + str(algorithm_meta) + "\">"
     
-    if not 'CALLERS' in meta_info.keys():
-        meta_info['CALLERS'] = "##INFO=<ID=CALLERS,Number=.,Type=String,Description=\"Somatic mutation callers that called this variant as somatic (PASS)\">"
+    if not 'PASS' in meta_info.keys():
+        meta_info['PASS'] = "##FILTER=<ID=PASS,Description=\"All filters passed\">"
+    if not 'VARIANT_CALLERS' in meta_info.keys():
+        meta_info['VARIANT_CALLERS'] = "##INFO=<ID=VARIANT_CALLERS,Number=.,Type=String,Description=\"Somatic mutation callers that called this variant as somatic (PASS)\">"
     if not 'TDP' in meta_info.keys():
         meta_info['TDP'] = "##INFO=<ID=TDP,Number=1,Type=Integer,Description=\"Sequencing depth at variant site in tumor sample (values from MuTect2 calls have priority over Strelka2)\">"
     if not 'CDP' in meta_info.keys():
@@ -406,9 +408,9 @@ def merge_multiple_vcfs(tumor_sample_id, control_sample_id, merge_all_vcf, merge
                             n_somatic_mutect += 1
    
 
-                all_calls[chrom][varkey]['info']['CALLERS'] = 'CALLERS=' +  str(','.join(all_calls[chrom][varkey]['callers'].keys()))
+                all_calls[chrom][varkey]['info']['VARIANT_CALLERS'] = 'VARIANT_CALLERS=' +  str(','.join(all_calls[chrom][varkey]['callers'].keys()))
                 if somatic == 1:
-                    all_calls[chrom][varkey]['info']['CALLERS'] = 'CALLERS=' +  str(','.join(all_calls[chrom][varkey]['callers_somatic'].keys()))
+                    all_calls[chrom][varkey]['info']['VARIANT_CALLERS'] = 'VARIANT_CALLERS=' +  str(','.join(all_calls[chrom][varkey]['callers_somatic'].keys()))
                 if 'mutect2' in all_calls[chrom][varkey]['callers'].keys():
                     all_calls[chrom][varkey]['info']['TDP'] = 'TDP=' + str(all_calls[chrom][varkey]['info']['MTCT2_DP_TUMOR'].split('=')[1])
                     all_calls[chrom][varkey]['info']['TVAF'] = 'TVAF=' + str(all_calls[chrom][varkey]['info']['MTCT2_VAF_TUMOR'].split('=')[1])

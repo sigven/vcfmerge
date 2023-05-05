@@ -17,7 +17,7 @@ The script produces multiple dedicated VCF INFO tags in the resulting output fil
  - __TVAF__ - allelic fraction of alternate allele in tumor (i.e. _AF_ in tumor sample, MuTect2 values have priority)
  - __CDP__ - total sequencing depth of variant site in control (i.e. _DP_ in control sample, MuTect2 values have priority)
  - __CVAF__ - allelic fraction of alternate allele in control (i.e. _AF_ in control sample, MuTect2 values have priority)
- - __CALLERS__ - any of _mutect2_, _strelka2_, or _mutect2,strelka2_ (called by both)
+ - __VARIANT_CALLERS__ - any of _mutect2_, _strelka2_, or _mutect2,strelka2_ (called by both)
  - __MNV_SUPPORT_STRELKA__ - as Strelka2 does not properly call multinucleotide variants (MNVs or block substitutions), the script gathers consecutive SNVs (all PASS) from Strelka2 calls when they are found as an MNV (PASS) in MuTect2
 
 ### Usage
