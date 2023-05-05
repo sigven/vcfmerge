@@ -8,17 +8,17 @@ _vcfmerge_ - a small Python script that merges somatic SNV/InDel calls from thre
 
 Two resulting VCF files are produced:
 
-  - __<tumor_id>_<normal_id>_all.vcf__ - contains all calls, both rejected and PASSed
-  - __<tumor_id>_<normal_id>_somatic.vcf__ - contains all somatic calls (PASS by one or both of Strelka2 and MuTect2)
+  - **<tumor_id>_<normal_id>_vcfmerge_all.vcf** - contains all calls, both rejected and PASSed
+  - **<tumor_id>_<normal_id>_vcfmerge_somatic.vcf** - contains all somatic calls (PASS by one or both of Strelka2 and MuTect2)
 
-The script produces makes multiple dedicated VCF INFO tags in the resulting output files to simplify downstream annotation:
+The script produces multiple dedicated VCF INFO tags in the resulting output files to simplify downstream annotation, most importantly:
 
- - __TDP__ - total sequencing depth of variant site in tumor (i.e. _DP_ in tumor sample)
- - __TVAF__ - allelic fraction of alternate allele in tumor (i.e. _AF_ in tumor sample)
- - __CDP__ - total sequencing depth of variant site in control (i.e. _DP_ in control sample)
- - __CVAF__ - allelic fraction of alternate allele in control (i.e. _AF_ in control sample)
- - __CALLERS__ - any of _mutect2_, _strelka2_, or _mutect2,strelka2 (called by both)
- - __MNV_SUPPORT_STRELKA__ - as Strelka2 does not properly call multinucleotide variants (MNVs or block substitutions), the script gathers consecutive SNVs (all PASS) from Strelka calls when they are found as an MNV (PASS) in MuTect2
+ - __TDP__ - total sequencing depth of variant site in tumor (i.e. _DP_ in tumor sample, MuTect2 values have priority)
+ - __TVAF__ - allelic fraction of alternate allele in tumor (i.e. _AF_ in tumor sample, MuTect2 values have priority)
+ - __CDP__ - total sequencing depth of variant site in control (i.e. _DP_ in control sample, MuTect2 values have priority)
+ - __CVAF__ - allelic fraction of alternate allele in control (i.e. _AF_ in control sample, MuTect2 values have priority)
+ - __CALLERS__ - any of _mutect2_, _strelka2_, or _mutect2,strelka2_ (called by both)
+ - __MNV_SUPPORT_STRELKA__ - as Strelka2 does not properly call multinucleotide variants (MNVs or block substitutions), the script gathers consecutive SNVs (all PASS) from Strelka2 calls when they are found as an MNV (PASS) in MuTect2
 
 ### Usage
 

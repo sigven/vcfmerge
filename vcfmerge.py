@@ -54,15 +54,15 @@ def __main__():
        logger.error('Output directory ' + str(args.output_dir) + ' does not exist')
        exit(0)
 
-   merge_all_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_all.vcf')
-   merge_somatic_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_somatic.vcf')
+   merge_all_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_vcfmerge_all.vcf')
+   merge_somatic_vcf = os.path.join(str(args.output_dir), str(args.control_sample_id) + '_' + str(args.tumor_sample_id) + '_vcfmerge_somatic.vcf')
    if (os.path.exists(merge_all_vcf) or os.path.exists(str(merge_all_vcf) + '.gz')) and args.force_overwrite is False:
        logger.error('Output file ' + str(merge_all_vcf) + '(.gz) exists - turn on \'--force_overwrite\' to overwrite existing output files')
        exit(0)
    if (os.path.exists(merge_somatic_vcf) or os.path.exists(str(merge_somatic_vcf) + '.gz')) and args.force_overwrite is False:
        logger.error('Output file ' + str(merge_somatic_vcf)  + '(.gz) exists - turn on \'--force_overwrite\' to overwrite existing output files')
        exit(0)
-   logger.info('Merging Strelka and MuTect calls for tumor-normal pair ' + str(args.tumor_sample_id) + '_' + str(args.control_sample_id))
+   logger.info('Merging Strelka2 and MuTect2 calls for tumor-normal pair ' + str(args.tumor_sample_id) + '_' + str(args.control_sample_id))
 
    merge_multiple_vcfs(args.tumor_sample_id, args.control_sample_id, merge_all_vcf, merge_somatic_vcf, logger, args.mutect_vcf, args.strelka_snv_vcf, args.strelka_indel_vcf, args.compress)
 
